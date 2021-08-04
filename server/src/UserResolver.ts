@@ -6,6 +6,7 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
+import { sign } from "jsonwebtoken";
 import { compare, hash } from "bcryptjs";
 import { User } from "./entity/User";
 
@@ -35,12 +36,14 @@ export class Resolvers {
       throw new Error("Invalid Login");
     }
 
-    const valid = compare(password, user.password);
+    const valid = await compare(password, user.password);
     if (!valid) {
       throw new Error("bad password lol");
     }
     return {
-      accessToken: "",
+      accessToken: sign({ userId: user.id }, "jbcdjbcjsdbj", {
+        expiresIn: "15m",
+      }),
     };
   }
 
