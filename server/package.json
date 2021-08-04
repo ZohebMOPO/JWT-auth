@@ -10,11 +10,12 @@
       "typescript": "3.3.3333"
    },
    "dependencies": {
-      "apollo-server-express": "^3.1.2",
+      "apollo-server-express": "2.9.3",
       "express": "^4.17.1",
       "graphql": "^15.5.1",
       "pg": "^8.7.1",
       "reflect-metadata": "^0.1.10",
+      "type-graphql": "^1.1.1",
       "typeorm": "0.2.36"
    },
    "scripts": {

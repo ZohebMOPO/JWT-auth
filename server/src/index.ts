@@ -1,11 +1,21 @@
 import "reflect-metadata";
 import express from "express";
-import { createConnection } from "typeorm";
-import { User } from "./entity/User";
+import { ApolloServer } from "apollo-server-express";
+import { buildSchema } from "type-graphql";
+import { Resolvers } from "./UserResolver";
 
-const app = express();
-
-(() => {})();
+(async () => {
+  const app = express();
+  const apolloServer = new ApolloServer({
+    schema: await buildSchema({
+      resolvers: [Resolvers],
+    }),
+  });
+  apolloServer.applyMiddleware({ app });
+  app.listen(4000, () => {
+    console.log("Running in 4000");
+  });
+})();
 // createConnection().then(async connection => {
 
 //     console.log("Inserting a new user into the database...");
