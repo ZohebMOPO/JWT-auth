@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "reflect-metadata";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -8,17 +9,21 @@ import { createConnection } from "typeorm";
 (async () => {
   const app = express();
 
+  console.log(process.env.ACCESS_TOKEN_SECRET);
+  console.log(process.env.REFRESH_TOKEN_SECRET);
   await createConnection();
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [Resolvers],
     }),
+    context: ({ req, res }) => ({ req, res }),
   });
   apolloServer.applyMiddleware({ app });
   app.listen(4000, () => {
     console.log("Running in 4000");
   });
 })();
+
 // createConnection().then(async connection => {
 
 //     console.log("Inserting a new user into the database...");
