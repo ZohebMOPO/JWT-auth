@@ -2,6 +2,7 @@ import {
   Arg,
   Ctx,
   Field,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -14,6 +15,7 @@ import { MyContext } from "./ContextTypes";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { isAuth } from "./isAuth";
 import { sendRefreshToken } from "./sendRefreshToken";
+import { getConnection } from "typeorm";
 
 @ObjectType()
 class LoginResponse {
@@ -27,15 +29,27 @@ export class Resolvers {
   hello() {
     return "hi";
   }
+
   @Query(() => String)
   @UseMiddleware(isAuth)
   bye(@Ctx() { payload }: MyContext) {
     return `your user id is : ${payload!.userId}`;
   }
+
   @Query(() => [User])
   users() {
     return User.find();
   }
+
+  @Mutation(() => Boolean)
+  async revokeRefreshTokenForUser(@Arg("userId", () => Int) userId: number) {
+    await getConnection()
+      .getRepository(User)
+      .increment({ id: userId }, "tokenVersion", 1);
+
+    return true;
+  }
+
   @Mutation(() => LoginResponse)
   async login(
     @Arg("email") email: string,
