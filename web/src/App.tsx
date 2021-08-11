@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
-import { gql } from 'apollo-boost'
+import { gql } from 'apollo-boost';
 
 const App: React.FC = () => {
   const { data, loading } = useQuery(gql`
